@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>World Boxing Champions</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="site-brand">
+        <h1>World Boxing Champions</h1>
+      </div>
+      <div class="logos" aria-hidden="false">
+        <a href="https://www.wbaboxing.com" target="_blank"><img src="/static/wba-logo.jpg" alt="WBA logo"></a>
+        <a href="https://wbcboxing.com" target="_blank"><img src="/static/wbc-logo.jpg" alt="WBC logo"></a>
+        <a href="https://www.ibf-usba-boxing.com" target="_blank"><img src="/static/ibf-logo.jpg" alt="IBF logo"></a>
+        <a href="https://wboboxing.com" target="_blank"><img src="/static/wbo-logo.jpg" alt="WBO logo"></a>
+        <a href="https://ringmagazine.com" target="_blank"><img src="/static/ring-logo.jpg" alt="The Ring logo"></a>
+      </div>
+    </div>
+  </header>
+  <main>
+    {% for division in divisions %}
+    <section class="division">
+      <h2>{{ division.name }} <small>{{ division.weight }}</small></h2>
+      <div class="org-grid">
+        {% for org, champs in division.items() %}
+          {% if org not in ['name','weight'] %}
+          <div class="org-card">
+            <h3>{{ org | upper }}</h3>
+            {% if champs %}
+              <ul>
+                {% for champ in champs %}
+                  <li class="champion">
+                    <a href="{{ champ.wikiUrl }}" target="_blank">{{ champ.name or 'Vacant' }}</a>
+                    {% if champ.record %}<span class="record">({{ champ.record.strip() }})</span>{% endif %}
+                    {% if champ.date %}<div class="date">Since: {{ champ.date }}</div>{% endif %}
+                    {% if champ.type %}<div class="type">{{ champ.type }}</div>{% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="vacant">No champion listed</p>
+            {% endif %}
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+  </main>
+  <footer>
+    <p>Data updated live from <a href="https://en.wikipedia.org/wiki/List_of_current_world_boxing_champions" target="_blank">Wikipedia</a>.</p>
+  </footer>
+</body>
+</html>

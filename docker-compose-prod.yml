@@ -1,0 +1,23 @@
+services:
+  wboxing_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wboxing
+    ports:
+      - "8022:8022"
+    environment:
+      PYTHONUNBUFFERED: "1"
+      VIRTUAL_HOST: boxing.costa365.site
+      PORT: 8022
+      VIRTUAL_PORT: 8022
+    volumes:
+      - ./:/app:delegated
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8022"]
+    restart: unless-stopped
+    networks:
+      - nginx-proxy
+
+networks:
+  nginx-proxy:
+    external: true

@@ -1,0 +1,92 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# pyenv
+.python-version
+
+# virtualenv and environment files
+venv/
+.env
+.env.*
+.env.local
+
+# IDEs and editors
+.vscode/
+*.swp
+*.swo
+
+# mypy
+.mypy_cache/
+
+# pytest
+.pytest_cache/
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+
+# Jupyter
+.ipynb_checkpoints
+
+# macOS
+.DS_Store
+
+# logs
+*.log
+
+# local caches and temporary files
+*.cache
+cache/
+tmp/
+
+# Docker
+docker-compose.override.yml
+
+# Misc
+*.egg
+*.egg-info/
+*.dist-info/
+build/
+
+# Ignore coverage reports and compiled assets
+coverage/
+
+# Node/npm (if present)
+node_modules/
+
+# Ignore generated static or uploaded files
+uploads/
+

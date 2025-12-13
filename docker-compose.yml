@@ -1,0 +1,16 @@
+services:
+  wboxing_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wboxing_api
+    ports:
+      - "8022:8022"
+    environment:
+      PYTHONUNBUFFERED: "1"
+    # Mount the host project into the container so code edits are visible immediately
+    volumes:
+      - ./:/app:delegated
+    # Run uvicorn in reload mode in the container so code changes auto-reload
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8022", "--reload"]
+    restart: unless-stopped
