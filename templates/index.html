@@ -37,7 +37,14 @@
                   <li class="champion">
                     <a href="{{ champ.wikiUrl }}" target="_blank">{{ champ.name or 'Vacant' }}</a>
                     {% if champ.record %}<span class="record">({{ champ.record.strip() }})</span>{% endif %}
-                    {% if champ.date %}<div class="date">Since: {{ champ.date }}</div>{% endif %}
+                    {% if champ.date %}
+                      <div class="date">
+                        Since: {{ champ.date }}
+                        {% if champ.recent %}
+                          <img src="/static/new.png" alt="New" class="new-flag" />
+                        {% endif %}
+                      </div>
+                    {% endif %}
                     {% if champ.type %}<div class="type">{{ champ.type }}</div>{% endif %}
                   </li>
                 {% endfor %}
