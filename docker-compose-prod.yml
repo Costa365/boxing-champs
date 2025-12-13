@@ -11,6 +11,7 @@ services:
       VIRTUAL_HOST: boxing.costa365.site
       PORT: 8022
       VIRTUAL_PORT: 8022
+      NEW_FLAG_DAYS: "14"
     volumes:
       - ./:/app:delegated
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8022"]

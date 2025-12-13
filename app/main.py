@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup, Tag, NavigableString
 import asyncio
 import datetime
 import logging
+import os
 
 URL = "https://en.wikipedia.org/wiki/List_of_current_world_boxing_champions"
 HEADERS = {
@@ -21,6 +22,15 @@ HEADERS = {
 app = FastAPI(title="World Boxing Champions",
               description="Scrapes Wikipedia's 'List of current world boxing champions' and exposes champions per organization and weight class.",
               version="1.0")
+
+# Config: how many days to consider a champion "new" (can be set via env NEW_FLAG_DAYS)
+try:
+    NEW_FLAG_DAYS = int(os.getenv("NEW_FLAG_DAYS", "14"))
+    if NEW_FLAG_DAYS < 0:
+        raise ValueError("must be non-negative")
+except Exception:
+    logging.warning("Invalid NEW_FLAG_DAYS env var %r; falling back to 14", os.getenv("NEW_FLAG_DAYS"))
+    NEW_FLAG_DAYS = 14
 
 # Mount static files and templates for the UI
 templates = Jinja2Templates(directory="templates")
@@ -110,7 +120,7 @@ def parse_champions(html: str):
                     if parsed:
                         today = datetime.datetime.utcnow().date()
                         delta = (today - parsed).days
-                        if 0 <= delta <= 14:
+                        if 0 <= delta <= NEW_FLAG_DAYS:
                             champ["recent"] = True
                 except Exception:
                     # Be resilient to any parsing issues - leave recent as False

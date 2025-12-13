@@ -8,6 +8,7 @@ services:
       - "8022:8022"
     environment:
       PYTHONUNBUFFERED: "1"
+      NEW_FLAG_DAYS: "14"
     # Mount the host project into the container so code edits are visible immediately
     volumes:
       - ./:/app:delegated
