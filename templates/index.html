@@ -35,7 +35,13 @@
               <ul>
                 {% for champ in champs %}
                   <li class="champion">
-                    <a href="{{ champ.wikiUrl }}" target="_blank">{{ champ.name or 'Vacant' }}</a>
+                    {% if champ.wikiUrl and champ.name %}
+                      <a href="{{ champ.wikiUrl }}" target="_blank">{{ champ.name }}</a>
+                    {% elif champ.name %}
+                      {{ champ.name }}
+                    {% else %}
+                      Vacant
+                    {% endif %}
                     {% if champ.record %}<span class="record">({{ champ.record.strip() }})</span>{% endif %}
                     {% if champ.date %}
                       <div class="date">
