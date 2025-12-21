@@ -2,7 +2,7 @@
 
 Minimal FastAPI project that scrapes Wikipedia's "List of current world boxing champions" and exposes a small web UI showing current champions by weight division.
 
-Available at [https://notes365.costa365.site](https://boxing.costa365.site).
+Available at [https://boxing.costa365.site](https://boxing.costa365.site).
 
 
 ## Quick start (docker compose)

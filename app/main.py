@@ -36,6 +36,7 @@ except Exception:
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+
 def fetch_page():
     resp = requests.get(URL, headers=HEADERS)
     resp.raise_for_status()
@@ -66,22 +67,27 @@ def parse_champions(html: str):
 
         champs = {}
 
-        org_count = 0
+        # Track pending rowspans per organization column. Each entry is either
+        # None or a dict: {"remaining": int, "champ": dict}
+        pending_rowspans = [None] * len(orgs)
+
         for row in table.find_all("tr")[1:]:
-            cells = row.find_all(["td", "th"])
+            cells_iter = iter(row.find_all(["td", "th"]))
 
-            for cell in cells:
-                if org_count >= len(orgs):
-                    organization = more_champs[org_count - len(orgs)]
-                else:
-                    organization = orgs[org_count]
-                rowspan = cell.get("rowspan")
-                if rowspan == None:
-                    more_champs.append(organization)
+            for col_idx, organization in enumerate(orgs):
+                # If there's a pending rowspan for this column, skip consuming a
+                # cell on this row. We already recorded the champ when we saw
+                # the original cell; don't re-append it on subsequent rows.
+                if pending_rowspans[col_idx]:
+                    pending_rowspans[col_idx]["remaining"] -= 1
+                    if pending_rowspans[col_idx]["remaining"] <= 0:
+                        pending_rowspans[col_idx] = None
+                    continue
 
-                a = cell.find("a")
-                if not a:
-                    org_count += 1
+                # Otherwise consume the next cell (if any)
+                cell = next(cells_iter, None)
+                if cell is None:
+                    # No cell present and no pending rowspan -> Vacant
                     champs.setdefault(organization, []).append({
                         "name": None,
                         "record": None,
@@ -90,48 +96,73 @@ def parse_champions(html: str):
                         "wikiUrl": None,
                     })
                     continue
-                href = a.get("href")
 
-                name = a.get_text(strip=True)            
-                record = a.find_next_sibling(string=True)                
+                rowspan = cell.get("rowspan")
+
+                a = cell.find("a")
+                if not a:
+                        vacant = {
+                            "name": None,
+                            "record": None,
+                            "title": "Vacant",
+                            "date": None,
+                            "wikiUrl": None,
+                        }
+                        champs.setdefault(organization, []).append(vacant)
+                        # If this cell spans multiple rows, carry the vacant forward
+                        try:
+                            span = int(rowspan) if rowspan is not None else 1
+                        except Exception:
+                            span = 1
+                        if span > 1:
+                            pending_rowspans[col_idx] = {"remaining": span - 1, "champ": vacant.copy()}
+                        continue
+
+                href = a.get("href")
+                name = a.get_text(strip=True)
+                record = a.find_next_sibling(string=True)
 
                 texts = cell.get_text(separator="\n", strip=True).split("\n")
 
-                title = texts[1]
+                title = texts[1] if len(texts) > 1 else None
                 if title == record:
                     title = None
 
-                date = texts[2]
-                if(len(texts)>3):
+                date = texts[2] if len(texts) > 2 else None
+                if len(texts) > 3:
                     date = texts[3]
 
                 champ = {
                     "name": name,
                     "record": record,
                     "date": date,
-                    # `recent` will be True when the parsed date is within the last 14 days
                     "recent": False,
                     "wikiUrl": "https://en.wikipedia.org" + href,
                 }
 
-                # Try to parse the date string and mark recent if within last 14 days
                 try:
                     parsed = _try_parse_date(date)
                     if parsed:
-                        today = datetime.datetime.utcnow().date()
+                        today = datetime.datetime.now(datetime.timezone.utc).date()
                         delta = (today - parsed).days
                         if 0 <= delta <= NEW_FLAG_DAYS:
                             champ["recent"] = True
                 except Exception:
-                    # Be resilient to any parsing issues - leave recent as False
                     pass
 
                 if title:
                     champ["type"] = title.replace(" champion", "")
 
+                # If the cell spans multiple rows, remember its champ for next rows
+                try:
+                    span = int(rowspan) if rowspan is not None else 1
+                except Exception:
+                    span = 1
+
+                if span > 1:
+                    pending_rowspans[col_idx] = {"remaining": span - 1, "champ": champ.copy()}
+
                 champs.setdefault(organization, []).append(champ)
-                
-                org_count += 1
 
         results.append ({
             "name": division,
@@ -149,51 +180,17 @@ def _try_parse_date(date_str: str):
     if not date_str:
         return None
 
-    # Trim out parenthetical annotations and excess whitespace
+    # Trim parenthetical annotations and whitespace, and remove ordinals.
     s = date_str.split("(")[0].strip()
-
-    # Common patterns we'll try
-    patterns = [
-        "%B %d, %Y",  # June 12, 2025
-        "%b %d, %Y",  # Jun 12, 2025
-        "%d %B %Y",   # 12 June 2025
-        "%d %b %Y",   # 12 Jun 2025
-        "%Y-%m-%d",   # 2025-06-12
-        "%d/%m/%Y",   # 12/06/2025
-        "%m/%d/%Y",   # 06/12/2025
-        "%Y",         # 2025
-    ]
-
-    # Also try to remove ordinal suffixes (1st, 2nd, 3rd, 4th)
     import re
-
     s = re.sub(r"(\d+)(st|nd|rd|th)", r"\1", s)
 
-    for p in patterns:
-        try:
-            dt = datetime.datetime.strptime(s, p).date()
-            return dt
-        except Exception:
-            continue
-
-    # As a last-ditch attempt, try to find e.g. 'June 2025' or 'Jun 2025'
     try:
-        parts = s.split()
-        if len(parts) == 2:
-            # 'June 2025' -> try parsing with day=1
-            try:
-                dt = datetime.datetime.strptime(parts[0] + " 1 " + parts[1], "%B %d %Y").date()
-                return dt
-            except Exception:
-                try:
-                    dt = datetime.datetime.strptime(parts[0] + " 1 " + parts[1], "%b %d %Y").date()
-                    return dt
-                except Exception:
-                    pass
+        # Expect format like: "December 6, 2025"
+        return datetime.datetime.strptime(s, "%B %d, %Y").date()
     except Exception:
-        pass
+        return None
 
-    return None
 
 @app.get("/")
 async def root(request: Request):

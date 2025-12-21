@@ -2,18 +2,19 @@
 body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin: 0; padding: 0; background: #f7f9fb; color: #111; }
 header { padding: 24px; background: #0b3d91; color: white; }
 
-.header-inner { max-width: 1100px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.header-inner { max-width: 1600px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .site-brand h1 { margin: 0 0 4px; }
 .site-brand p { margin: 0; opacity: 0.9; }
+.site-brand img { max-width: 800px; }
 .logos { display: flex; gap: 12px; align-items: center; }
 .logos img { height: 64px; width: auto; display: block; object-fit: contain; border-radius: 4px;}
 
 @media (max-width: 840px) {
   .header-inner { flex-direction: column; align-items: flex-start; }
-  .logos { margin-top: 6px; flex-wrap: wrap; gap: 6px; }
+  .logos { margin-top: 6px; flex-wrap: wrap; gap: 6px; align-self: center;}
   .logos img { height: 48px; border-radius: 4px;}
 }
-main { padding: 20px; max-width: 1100px; margin: 0 auto; }
+main { padding: 20px; max-width: 1600px; margin: 0 auto; }
 .division { background: #c2ddf3; border-radius: 8px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
 .division h2 { margin: 0 0 12px; font-size: 1.1rem; display: flex; gap: 12px; align-items: baseline; }
 .division h2 small { font-size: 0.9rem; color: #666; }
