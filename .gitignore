@@ -71,6 +71,7 @@ staticfiles/
 *.cache
 cache/
 tmp/
+app/nationalities.json
 
 # Docker
 docker-compose.override.yml

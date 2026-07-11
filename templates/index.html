@@ -42,6 +42,7 @@
                     {% else %}
                       Vacant
                     {% endif %}
+                    {% if champ.flagUrl %}<img src="{{ champ.flagUrl }}" alt="{{ country_name(champ.country) }}" title="{{ country_name(champ.country) }}" class="flag" loading="lazy" referrerpolicy="no-referrer" />{% endif %}
                     {% if champ.record %}<span class="record">({{ champ.record.strip() }})</span>{% endif %}
                     {% if champ.date %}
                       <div class="date">
