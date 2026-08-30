@@ -35,15 +35,17 @@
               <ul>
                 {% for champ in champs %}
                   <li class="champion">
-                    {% if champ.wikiUrl and champ.name %}
-                      <a href="{{ champ.wikiUrl }}" target="_blank">{{ champ.name }}</a>
-                    {% elif champ.name %}
-                      {{ champ.name }}
-                    {% else %}
-                      Vacant
-                    {% endif %}
-                    {% if champ.flagUrl %}<img src="{{ champ.flagUrl }}" alt="{{ country_name(champ.country) }}" title="{{ country_name(champ.country) }}" class="flag" loading="lazy" referrerpolicy="no-referrer" />{% endif %}
-                    {% if champ.record %}<span class="record">({{ champ.record.strip() }})</span>{% endif %}
+                    <span class="name-flag">
+                      {% if champ.wikiUrl and champ.name %}
+                        <a href="{{ champ.wikiUrl }}" target="_blank">{{ champ.name }}</a>
+                      {% elif champ.name %}
+                        {{ champ.name }}
+                      {% else %}
+                        <span class="vacant">Vacant</span>
+                      {% endif %}
+                      {% if champ.flagUrl %}<img src="{{ champ.flagUrl }}" alt="{{ country_name(champ.country) }}" title="{{ country_name(champ.country) }}" class="flag" loading="lazy" referrerpolicy="no-referrer" />{% endif %}
+                    </span>
+                    {% if champ.recordParts %}<span class="record"><span class="record-dash">{{ champ.recordParts.wins }}-{{ champ.recordParts.losses }}{% if champ.recordParts.draws %}-{{ champ.recordParts.draws }}{% endif %}</span><span class="ko-badge">{{ champ.recordParts.kos }} KO</span></span>{% elif champ.recordDisplay %}<span class="record">{{ champ.recordDisplay }}</span>{% endif %}
                     {% if champ.date %}
                       <div class="date">
                         Since: {{ champ.date }}

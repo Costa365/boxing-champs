@@ -1,13 +1,13 @@
 * { box-sizing: border-box; }
-body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin: 0; padding: 0; background: #f7f9fb; color: #111; }
-header { padding: 24px; background: #0b3d91; color: white; }
+body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin: 0; padding: 0; background: #eef3f8; color: #1a1a1a; font-size: 15.5px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+header { padding: 24px; background: linear-gradient(135deg, #0b3d91, #0a2f70); color: white; border-bottom: 3px solid #f0a202; }
 
 .header-inner { max-width: 1600px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .site-brand h1 { margin: 0 0 4px; }
 .site-brand p { margin: 0; opacity: 0.9; }
 .site-brand img { max-width: 800px; }
 .logos { display: flex; gap: 12px; align-items: center; }
-.logos img { height: 64px; width: auto; display: block; object-fit: contain; border-radius: 4px;}
+.logos img { height: 64px; width: auto; display: block; object-fit: contain; border-radius: 4px; background: #fff; }
 
 @media (max-width: 840px) {
   .header-inner { flex-direction: column; align-items: flex-start; }
@@ -15,19 +15,34 @@ header { padding: 24px; background: #0b3d91; color: white; }
   .logos img { height: 48px; border-radius: 4px;}
 }
 main { padding: 20px; max-width: 1600px; margin: 0 auto; }
-.division { background: #c2ddf3; border-radius: 8px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-.division h2 { margin: 0 0 12px; font-size: 1.1rem; display: flex; gap: 12px; align-items: baseline; }
-.division h2 small { font-size: 0.9rem; color: #666; }
-.org-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(264px, 1fr)); gap: 12px; }
-.org-card { border: 1px solid #eee; padding: 10px; border-radius: 6px; background: #fff; }
-.org-card h3 { margin: 0 0 8px; font-size: 0.95rem; color: #0b3d91; }
-.org-card ul { padding-left: 16px; margin: 6px 0; }
-.org-card ul li { padding-left: 0; }
-.champion { margin: 8px 0; }
+.division { background: #d6e8f9; border: 1px solid rgba(11, 61, 145, 0.08); border-radius: 10px; padding: 18px; margin-bottom: 18px; box-shadow: 0 1px 3px rgba(11, 61, 145, 0.08); }
+.division h2 { margin: 0 0 14px; font-size: 1.15rem; font-weight: 700; letter-spacing: 0.01em; color: #0a2f70; display: flex; gap: 12px; align-items: baseline; }
+.division h2 small { font-size: 0.85rem; font-weight: 500; color: #5b6b82; }
+.org-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(264px, 1fr)); gap: 14px; }
+.org-card { container-type: inline-size; container-name: orgcard; border: 1px solid #e6ecf2; padding: 14px; border-radius: 10px; background: #fff; box-shadow: 0 1px 2px rgba(11, 61, 145, 0.04); transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease; }
+.org-card:hover { box-shadow: 0 8px 20px rgba(11, 61, 145, 0.14); border-color: rgba(11, 61, 145, 0.25); transform: translateY(-2px); }
+.org-card h3 { margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px solid #f0f3f7; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; color: #0b3d91; }
+.org-card ul { list-style: none; padding: 0; margin: 0; }
+.champion { margin: 0; padding: 10px 0; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 6px; row-gap: 2px; }
+.champion:first-child { padding-top: 0; }
+.champion + .champion { border-top: 1px solid #f0f3f7; }
 .champion a { color: #111; font-weight: 600; text-decoration: none; }
-.record { color: #666; margin-left: 6px; font-weight: 400; }
-.date, .type { color: #444; font-size: 0.85rem; }
+.champion a:hover { color: #0b3d91; text-decoration: underline; }
+.name-flag { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-weight: 600; }
+.record { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; flex-basis: 100%; }
+.record-dash { font-weight: 700; color: #333; font-size: 0.95rem; }
+.ko-badge { background: #fbeecb; color: #8a5a08; border-radius: 6px; padding: 1px 7px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em; }
+/* Above this width a name+flag+record fits comfortably on one line for the
+   vast majority of names — below it, always stack so record placement is
+   driven by card width, not by how long any given fighter's name happens
+   to be. */
+@container orgcard (min-width: 290px) {
+  .record { flex-basis: auto; }
+}
+.date, .type { color: #566; font-size: 0.83rem; flex-basis: 100%; }
+.type { display: inline-flex; align-self: flex-start; margin-top: 2px; padding: 1px 8px; border-radius: 10px; background: #eef2f7; color: #445; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.03em; text-transform: uppercase; }
 .new-flag { height: 18px; vertical-align: middle; margin-left: 8px; }
-.flag { height: 14px; width: auto; vertical-align: middle; margin-left: 6px; border: 1px solid #ddd; }
-.vacant { color: #a00; }
-footer { padding: 12px 20px; text-align: center; color: #555; font-size: 0.9rem; }
+.flag { height: 14px; width: auto; vertical-align: middle; border: 1px solid #ddd; border-radius: 2px; }
+.vacant { color: #a5322a; font-style: italic; font-weight: 500; }
+footer { padding: 16px 20px; text-align: center; color: #5b6b82; font-size: 0.88rem; }
+footer a { color: #0b3d91; }

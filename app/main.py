@@ -35,6 +35,10 @@ RING_FIRST_LAST_RE = re.compile(r'"firstName"\s*:\s*"([^"]+)"\s*,\s*"lastName"\s
 WIKI_BOXER_CATEGORY_RE = re.compile(
     r"^Category:(.+?)\s+(?:male\s+|female\s+)?boxers$", re.IGNORECASE
 )
+# Matches records like "34–2 (1) (27 KO)" or "27-0 (19 KO)" -> wins, losses, draws, KOs.
+RECORD_RE = re.compile(
+    r"(\d+)\s*[-–—]\s*(\d+)(?:\s*\((\d+)\))?\s*\((\d+)\s*KOs?\)", re.IGNORECASE
+)
 # Boxer-nationality demonym -> ISO 3166-1 alpha-2. Covers common current
 # professional-boxing nationalities; unmatched demonyms fall through and the
 # boxer remains flagless (add manual ringUrl override in that case).
@@ -448,6 +452,8 @@ def parse_champions(html: str):
                 champ = {
                     "name": name,
                     "record": record,
+                    "recordDisplay": format_record(record),
+                    "recordParts": parse_record(record),
                     "date": date,
                     "recent": False,
                     "wikiUrl": urljoin("https://en.wikipedia.org/", href),
@@ -507,6 +513,33 @@ def _apply_cached_flags(data, cache: dict) -> None:
             champ["flagUrl"] = entry["flagUrl"]
             if entry.get("country"):
                 champ["country"] = entry["country"]
+
+
+def parse_record(record: str | None) -> dict | None:
+    """Turn a raw Wikipedia record like '34–2 (1) (27 KO)' into
+    {"wins": "34", "losses": "2", "draws": "1", "kos": "27"} for structured
+    rendering. Returns None if it doesn't match the expected "W-L (D) (N KO)"
+    shape, so callers can fall back to the raw string instead of losing it.
+    """
+    if not record:
+        return None
+    m = RECORD_RE.search(record)
+    if not m:
+        return None
+    wins, losses, draws, kos = m.groups()
+    return {"wins": wins, "losses": losses, "draws": draws, "kos": kos}
+
+
+def format_record(record: str | None) -> str | None:
+    """Plain-text fallback rendering of a record, e.g. 'W:34 L:2 D:1 KO:27'."""
+    parts_dict = parse_record(record)
+    if not parts_dict:
+        return record.strip() if record else None
+    parts = [f"W:{parts_dict['wins']}", f"L:{parts_dict['losses']}"]
+    if parts_dict["draws"]:
+        parts.append(f"D:{parts_dict['draws']}")
+    parts.append(f"KO:{parts_dict['kos']}")
+    return " ".join(parts)
 
 
 def _try_parse_date(date_str: str):
