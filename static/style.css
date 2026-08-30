@@ -15,11 +15,11 @@ header { padding: 24px; background: linear-gradient(135deg, #0b3d91, #0a2f70); c
   .logos img { height: 48px; border-radius: 4px;}
 }
 main { padding: 20px; max-width: 1600px; margin: 0 auto; }
-.division { background: #d6e8f9; border: 1px solid rgba(11, 61, 145, 0.08); border-radius: 10px; padding: 18px; margin-bottom: 18px; box-shadow: 0 1px 3px rgba(11, 61, 145, 0.08); }
+.division { background: #c3ddf3; border: 1px solid rgba(11, 61, 145, 0.08); border-radius: 10px; padding: 18px; margin-bottom: 18px; box-shadow: 0 1px 3px rgba(11, 61, 145, 0.08); }
 .division h2 { margin: 0 0 14px; font-size: 1.15rem; font-weight: 700; letter-spacing: 0.01em; color: #0a2f70; display: flex; gap: 12px; align-items: baseline; }
 .division h2 small { font-size: 0.85rem; font-weight: 500; color: #5b6b82; }
 .org-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(264px, 1fr)); gap: 14px; }
-.org-card { container-type: inline-size; container-name: orgcard; border: 1px solid #e6ecf2; padding: 14px; border-radius: 10px; background: #fff; box-shadow: 0 1px 2px rgba(11, 61, 145, 0.04); transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease; }
+.org-card { container-type: inline-size; container-name: orgcard; border: 1px solid #e6ecf2; padding: 14px; border-radius: 10px; background: #eaf3fb; box-shadow: 0 1px 2px rgba(11, 61, 145, 0.04); transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease; }
 .org-card:hover { box-shadow: 0 8px 20px rgba(11, 61, 145, 0.14); border-color: rgba(11, 61, 145, 0.25); transform: translateY(-2px); }
 .org-card h3 { margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px solid #f0f3f7; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; color: #0b3d91; }
 .org-card ul { list-style: none; padding: 0; margin: 0; }
