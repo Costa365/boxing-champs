@@ -40,7 +40,7 @@ main { padding: 20px; max-width: 1600px; margin: 0 auto; }
   .record { flex-basis: auto; }
 }
 .date, .type { color: #566; font-size: 0.83rem; flex-basis: 100%; }
-.type { display: inline-flex; align-self: flex-start; margin-top: 2px; padding: 1px 8px; border-radius: 10px; background: #eef2f7; color: #445; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.03em; text-transform: uppercase; }
+.type { display: inline-flex; align-self: flex-start; margin-top: 2px; padding: 1px 8px; border-radius: 10px; background: #dde6f2; color: #445; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.03em; text-transform: uppercase; }
 .new-flag { height: 18px; vertical-align: middle; margin-left: 8px; }
 .flag { height: 14px; width: auto; vertical-align: middle; border: 1px solid #ddd; border-radius: 2px; }
 .vacant { color: #a5322a; font-style: italic; font-weight: 500; }
