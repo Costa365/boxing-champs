@@ -1,5 +1,5 @@
 * { box-sizing: border-box; }
-body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin: 0; padding: 0; background: #eef3f8; color: #1a1a1a; font-size: 15.5px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin: 0; padding: 0; background: #0b0c4e; color: #1a1a1a; font-size: 15.5px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 header { padding: 24px; background: linear-gradient(135deg, #0b3d91, #0a2f70); color: white; border-bottom: 3px solid #f0a202; }
 
 .header-inner { max-width: 1600px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
@@ -15,17 +15,17 @@ header { padding: 24px; background: linear-gradient(135deg, #0b3d91, #0a2f70); c
   .logos img { height: 48px; border-radius: 4px;}
 }
 main { padding: 20px; max-width: 1600px; margin: 0 auto; background: #0b0c4e;}
-.division { background: #05192a; border: 1px solid rgba(11, 61, 145, 0.08); border-radius: 10px; padding: 18px; margin-bottom: 18px; box-shadow: 0 1px 3px rgba(11, 61, 145, 0.08); }
+.division { background: #05192a; border: 1px solid rgba(95, 111, 138, 0); border-radius: 10px; padding: 18px; margin-bottom: 18px; box-shadow: 0 1px 3px rgba(11, 61, 145, 0.08); }
 .division h2 { margin: 0 0 14px; font-size: 1.15rem; font-weight: 700; letter-spacing: 0.01em; color: #85a5db; display: flex; gap: 12px; align-items: baseline; }
 .division h2 small { font-size: 0.85rem; font-weight: 500; color: #5b6b82; }
 .org-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(264px, 1fr)); gap: 14px; }
-.org-card { container-type: inline-size; container-name: orgcard; border: 1px solid #0a2f70; padding: 14px; border-radius: 10px; background: #022442; box-shadow: 0 1px 2px rgba(11, 61, 145, 0.04); transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease; }
+.org-card { container-type: inline-size; container-name: orgcard; border: 1px solid #284880; padding: 14px; border-radius: 10px; background: #0d3050; box-shadow: 0 1px 2px rgba(11, 61, 145, 0.04); transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease; }
 .org-card:hover { box-shadow: 0 8px 20px rgba(11, 61, 145, 0.14); border-color: rgba(11, 61, 145, 0.25); transform: translateY(-2px); }
 .org-card h3 { margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px solid #3e7ae4; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; color: #85a5db; }
 .org-card ul { list-style: none; padding: 0; margin: 0; }
 .champion { margin: 0; padding: 10px 0; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 6px; row-gap: 2px; }
 .champion:first-child { padding-top: 0; }
-.champion + .champion { border-top: 1px solid #f0f3f7; }
+.champion + .champion { border-top: 1px solid #3e7ae4; }
 .champion a { color: #bebbde; font-weight: 600; text-decoration: none; }
 .champion a:hover { color: #bebbff; text-decoration: underline; }
 .name-flag { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-weight: 600; }
@@ -39,10 +39,10 @@ main { padding: 20px; max-width: 1600px; margin: 0 auto; background: #0b0c4e;}
 @container orgcard (min-width: 290px) {
   .record { flex-basis: auto; }
 }
-.date, .type { color: #566; font-size: 0.83rem; flex-basis: 100%; }
+.date, .type { color: #8b8ebd; font-size: 0.83rem; flex-basis: 100%; }
 .type { display: inline-flex; align-self: flex-start; margin-top: 2px; padding: 1px 8px; border-radius: 10px; background: #0b2f5f; color: rgb(191, 191, 223); font-weight: 600; font-size: 0.75rem; letter-spacing: 0.03em; text-transform: uppercase; }
 .new-flag { height: 18px; vertical-align: middle; margin-left: 8px; }
 .flag { height: 14px; width: auto; vertical-align: middle; border: 1px solid #ddd; border-radius: 2px; }
-.vacant { color: #a5322a; font-style: italic; font-weight: 500; }
+.vacant { color: #ff554a; font-style: italic; font-weight: 500; }
 footer { padding: 16px 20px; text-align: center; color: #5b6b82; font-size: 0.88rem; background: linear-gradient(135deg, #0b3d91, #0a2f70);}
 footer a { color: #6685bb; }
