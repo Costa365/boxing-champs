@@ -360,6 +360,20 @@ def fetch_nationality(name: str, wiki_url: str | None) -> dict | None:
         return None
 
 
+def _is_not_recognized_cell(cell) -> bool:
+    """True if a cell marks a division the sanctioning body doesn't recognize.
+
+    Wikipedia renders those cells empty and shaded (the WBA/IBF/WBO/Ring
+    columns for bridgerweight, which only the WBC sanctions), whereas a title
+    that exists but has no holder spells out "vacant" in the cell. Keying off
+    "empty and shaded" rather than the division name keeps the wiki page as the
+    source of truth if another organization adopts the division later.
+    """
+    if cell.get_text(strip=True):
+        return False
+    return "background" in (cell.get("style") or "").lower()
+
+
 def parse_champions(html: str):
     soup = BeautifulSoup(html, "html.parser")
 
@@ -409,6 +423,7 @@ def parse_champions(html: str):
                         "name": None,
                         "record": None,
                         "title": "Vacant",
+                        "status": "vacant",
                         "date": None,
                         "wikiUrl": None,
                     })
@@ -418,15 +433,17 @@ def parse_champions(html: str):
 
                 a = cell.find("a")
                 if not a:
+                        not_recognized = _is_not_recognized_cell(cell)
                         vacant = {
                             "name": None,
                             "record": None,
-                            "title": "Vacant",
+                            "title": "Not Recognized" if not_recognized else "Vacant",
+                            "status": "not-recognized" if not_recognized else "vacant",
                             "date": None,
                             "wikiUrl": None,
                         }
                         champs.setdefault(organization, []).append(vacant)
-                        # If this cell spans multiple rows, carry the vacant forward
+                        # If this cell spans multiple rows, carry the placeholder forward
                         try:
                             span = int(rowspan) if rowspan is not None else 1
                         except Exception:

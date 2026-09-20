@@ -43,6 +43,7 @@ main { padding: 20px; max-width: 1600px; margin: 0 auto; background: #0b0c4e;}
 .type { display: inline-flex; align-self: flex-start; margin-top: 2px; padding: 1px 8px; border-radius: 10px; background: #0b2f5f; color: rgb(191, 191, 223); font-weight: 600; font-size: 0.75rem; letter-spacing: 0.03em; text-transform: uppercase; }
 .new-flag { height: 18px; vertical-align: middle; margin-left: 8px; }
 .flag { height: 14px; width: auto; vertical-align: middle; border: 1px solid #ddd; border-radius: 2px; }
-.vacant { color: #ff554a; font-style: italic; font-weight: 500; }
+.vacant { color: #4d8bf9; font-style: italic; font-weight: 500; }
+.not-recognized { color: #7f89a8; font-style: italic; font-weight: 500; }
 footer { padding: 16px 20px; text-align: center; color: #5b6b82; font-size: 0.88rem; background: linear-gradient(135deg, #0b3d91, #0a2f70);}
 footer a { color: #6685bb; }
