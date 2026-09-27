@@ -1,6 +1,6 @@
 # World Boxing Champions
 
-Minimal FastAPI project that scrapes Wikipedia's "List of current world boxing champions" and exposes a small web UI showing current champions by weight division. WBA, WBC, IBF and WBA champions are shown.
+Minimal FastAPI project that scrapes Wikipedia's "List of current world boxing champions" and exposes a small web UI showing current champions by weight division. WBA, WBC, IBF, WBA and Ring titles are shown - including regular and interim champions.
 
 Available at [https://boxing.costa365.site](https://boxing.costa365.site).
 
