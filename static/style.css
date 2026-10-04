@@ -19,7 +19,7 @@ main { padding: 20px; max-width: 1600px; margin: 0 auto; background: #0b0c4e;}
 .division h2 { margin: 0 0 14px; font-size: 1.15rem; font-weight: 700; letter-spacing: 0.01em; color: #85a5db; display: flex; gap: 12px; align-items: baseline; }
 .division h2 small { font-size: 0.85rem; font-weight: 500; color: #5b6b82; }
 .org-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(264px, 1fr)); gap: 14px; }
-.org-card { container-type: inline-size; container-name: orgcard; border: 1px solid #284880; padding: 14px; border-radius: 10px; background: #0d3050; box-shadow: 0 1px 2px rgba(11, 61, 145, 0.04); transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease; }
+.org-card { container-type: inline-size; container-name: orgcard; border: 1px solid #2d3447; padding: 14px; border-radius: 10px; background: #0d3050; box-shadow: 0 1px 2px rgba(11, 61, 145, 0.04); transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease; }
 .org-card:hover { box-shadow: 0 8px 20px rgba(11, 61, 145, 0.14); border-color: rgba(11, 61, 145, 0.25); transform: translateY(-2px); }
 .org-card h3 { margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px solid #9faabc; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; color: #85a5db; }
 .org-card ul { list-style: none; padding: 0; margin: 0; }
@@ -45,5 +45,5 @@ main { padding: 20px; max-width: 1600px; margin: 0 auto; background: #0b0c4e;}
 .flag { height: 14px; width: auto; vertical-align: middle; border: 1px solid #ddd; border-radius: 2px; }
 .vacant { color: #4d8bf9; font-style: italic; font-weight: 500; }
 .not-recognized { color: #7f89a8; font-style: italic; font-weight: 500; }
-footer { padding: 16px 20px; text-align: center; color: #5b6b82; font-size: 0.88rem; background: linear-gradient(135deg, #0b3d91, #0a2f70);}
+footer { padding: 2px 2px; text-align: center; color: #a0a4b0; font-size: 0.88rem; background: linear-gradient(135deg, #0b3d91, #0a2f70);}
 footer a { color: #6685bb; }
