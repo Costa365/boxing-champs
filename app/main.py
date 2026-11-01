@@ -35,9 +35,11 @@ RING_FIRST_LAST_RE = re.compile(r'"firstName"\s*:\s*"([^"]+)"\s*,\s*"lastName"\s
 WIKI_BOXER_CATEGORY_RE = re.compile(
     r"^Category:(.+?)\s+(?:male\s+|female\s+)?boxers$", re.IGNORECASE
 )
-# Matches records like "34–2 (1) (27 KO)" or "27-0 (19 KO)" -> wins, losses, draws, KOs.
+# Matches both "34–2–1 (27 KO)" and legacy "34–2 (1) (27 KO)" records.
 RECORD_RE = re.compile(
-    r"(\d+)\s*[-–—]\s*(\d+)(?:\s*\((\d+)\))?\s*\((\d+)\s*KOs?\)", re.IGNORECASE
+    r"(?P<wins>\d+)\s*[-–—]\s*(?P<losses>\d+)"
+    r"(?:\s*[-–—]\s*(?P<draws>\d+)|\s*\((?P<legacy_draws>\d+)\))?"
+    r"\s*\((?P<kos>\d+)\s*KOs?\)", re.IGNORECASE
 )
 # Boxer-nationality demonym -> ISO 3166-1 alpha-2. Covers common current
 # professional-boxing nationalities; unmatched demonyms fall through and the
@@ -533,18 +535,22 @@ def _apply_cached_flags(data, cache: dict) -> None:
 
 
 def parse_record(record: str | None) -> dict | None:
-    """Turn a raw Wikipedia record like '34–2 (1) (27 KO)' into
+    """Turn a Wikipedia record like '34–2–1 (27 KO)' or '34–2 (1) (27 KO)' into
     {"wins": "34", "losses": "2", "draws": "1", "kos": "27"} for structured
-    rendering. Returns None if it doesn't match the expected "W-L (D) (N KO)"
-    shape, so callers can fall back to the raw string instead of losing it.
+    rendering. Require the entire record to match, so an unsupported format
+    falls back to the raw string instead of silently parsing only its tail.
     """
     if not record:
         return None
-    m = RECORD_RE.search(record)
+    m = RECORD_RE.fullmatch(record.strip())
     if not m:
         return None
-    wins, losses, draws, kos = m.groups()
-    return {"wins": wins, "losses": losses, "draws": draws, "kos": kos}
+    return {
+        "wins": m["wins"],
+        "losses": m["losses"],
+        "draws": m["draws"] or m["legacy_draws"],
+        "kos": m["kos"],
+    }
 
 
 def format_record(record: str | None) -> str | None:
