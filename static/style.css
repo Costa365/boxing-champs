@@ -24,7 +24,10 @@ header { padding: 24px; background: var(--header-bg); color: var(--text); border
 .logos img { height: 64px; width: auto; display: block; object-fit: contain; border-radius: 4px; background: transparent }
 
 @media (max-width: 840px) {
-  .header-inner { flex-direction: column; align-items: flex-start; }
+  header { padding: 24px 12px; }
+  .header-inner { padding: 0; flex-direction: column; align-items: flex-start; }
+  .site-brand { width: 100%; }
+  .site-brand img { display: block; width: 100%; height: auto; margin: 0 auto; }
   .logos { margin-top: 6px; flex-wrap: wrap; gap: 6px; align-self: center;}
   .logos img { height: 48px; border-radius: 4px;}
 }
