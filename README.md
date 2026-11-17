@@ -17,6 +17,7 @@ Then open `http://127.0.0.1:8022/` in your browser.
 
 ### Notes
 - The app scrapes live data from Wikipedia and therefore requires outbound internet access from the host or container.
+- Wikipedia champion scans and nationality retries both run every three hours. Each successful scan also immediately triggers nationality lookups for missing flags.
 - The `templates/` and `static/` directories are included in the Docker image so the UI is served by the FastAPI app.
 - Wikipedia page structure can change; if the parser fails, the HTML structure likely changed and parser needs tweaks.
 
@@ -28,7 +29,7 @@ Then open `http://127.0.0.1:8022/` in your browser.
   2. **Wikidata** — resolve the Wikipedia page to a Wikidata entity, read `P27` (country of citizenship) and that country's `P297` (ISO 3166-1 alpha-2 code).
   3. **Wikipedia categories** — read the Wikipedia article's categories, match `Category:<Demonym> (male|female)? boxers` (e.g. *English male boxers*, *Cuban male boxers*), and map the demonym to an ISO code via a curated table in `main.py`. Handles boxers whose Wikidata entry has no P27 set.
 
-Flag images are served by [flagcdn.com](https://flagcdn.com). Cache misses are stored as `flagUrl: null` and re-tried on every enrichment pass. To pin a specific Ring page for a boxer, add `ringUrl` to their entry:
+Flag images are served by [flagcdn.com](https://flagcdn.com). Every successful Wikipedia scan immediately triggers a background enrichment pass, so new champions receive flags as soon as their nationality lookups finish. Resolved flags update all of the boxer's current titles, even if another scan finishes during the lookup. Cache misses are stored as `flagUrl: null` and re-tried on every enrichment pass, with a periodic retry every three hours. To pin a specific Ring page for a boxer, add `ringUrl` to their entry:
   ```json
   "https://en.wikipedia.org/wiki/Hamzah_Sheeraz": {
     "name": "Hamzah Sheeraz",
@@ -36,4 +37,4 @@ Flag images are served by [flagcdn.com](https://flagcdn.com). Cache misses are s
     "ringUrl": "https://www.ringmagazine.com/fighters/hamzah-sheeraz-abc123"
   }
   ```
-- NATIONALITY_REQUEST_DELAY: (optional) Seconds to wait between nationality lookups. Defaults to `0.5`.
+- NATIONALITY_REQUEST_DELAY: (optional) Seconds to wait between nationality lookups. Defaults to `1.5`.

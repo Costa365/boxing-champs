@@ -602,7 +602,7 @@ async def champions():
     return JSONResponse(content=data)
 
 
-async def _refresh_loop(interval_seconds: int = 8 * 3600):
+async def _refresh_loop(interval_seconds: int = 3 * 3600):
     """Background loop that refreshes the cached champions every `interval_seconds`.
 
     Uses `asyncio.to_thread` to run blocking network and parse work in a threadpool.
@@ -614,21 +614,24 @@ async def _refresh_loop(interval_seconds: int = 8 * 3600):
             _apply_cached_flags(data, app.state.nationalities)
             app.state.champions_data = data
             app.state.last_updated = datetime.datetime.utcnow()
+            app.state.nationalities_refresh.set()
             logging.info("Champions cache refreshed at %s", app.state.last_updated)
         except Exception:
             logging.exception("Failed to refresh champions cache")
         await asyncio.sleep(interval_seconds)
 
 
-async def _enrich_nationalities_loop(poll_seconds: int = 6 * 3600):
-    """Background loop that fills in missing nationality flags via BoxRec.
+async def _enrich_nationalities_loop(poll_seconds: int = 3 * 3600):
+    """Resolve missing flags after each champions refresh and retry periodically.
 
-    Runs continuously. After each pass over all current champions it sleeps
-    for `poll_seconds` before checking again (so newly crowned champions
-    discovered on the next Wikipedia refresh get picked up). Cache misses are
-    recorded as `{flagUrl: None}` to avoid retrying endlessly.
+    A refresh wakes this single worker immediately. Refreshes during a lookup
+    queue another pass over the latest data. Unresolved entries are retried on
+    the next pass, including after `poll_seconds` without a successful refresh.
     """
+    refresh = app.state.nationalities_refresh
     while True:
+        # Clear before taking the snapshot so a refresh during this pass is kept.
+        refresh.clear()
         data = getattr(app.state, "champions_data", None)
         cache = app.state.nationalities
         if data:
@@ -681,6 +684,9 @@ async def _enrich_nationalities_loop(poll_seconds: int = 6 * 3600):
                     champ["flagUrl"] = result["flagUrl"]
                     if result.get("country"):
                         champ["country"] = result["country"]
+                    # A scan may have replaced our snapshot while we awaited the
+                    # lookup. Update the live data, including every title held.
+                    _apply_cached_flags(app.state.champions_data or [], cache)
                     logging.info(
                         "Resolved nationality for %s -> %s (via %s)",
                         name, result.get("country"), result.get("source", "wikidata"),
@@ -691,7 +697,10 @@ async def _enrich_nationalities_loop(poll_seconds: int = 6 * 3600):
                 await asyncio.sleep(NATIONALITY_REQUEST_DELAY)
             if dirty:
                 await asyncio.to_thread(_save_nationalities, cache)
-        await asyncio.sleep(poll_seconds)
+        try:
+            await asyncio.wait_for(refresh.wait(), timeout=poll_seconds)
+        except asyncio.TimeoutError:
+            pass
 
 
 @app.on_event("startup")
@@ -700,6 +709,7 @@ async def _startup_fetch_and_schedule():
     # initialize state
     app.state.champions_data = None
     app.state.last_updated = None
+    app.state.nationalities_refresh = asyncio.Event()
     app.state.nationalities = await asyncio.to_thread(_load_nationalities)
 
     # initial fetch (run in thread)
